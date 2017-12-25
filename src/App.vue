@@ -10,12 +10,17 @@
         <t-aside></t-aside>
       </div>
     </transition>
+    <Message></Message>
+    <BackTop></BackTop>
   </div>
 </template>
 
 <script>
+//  import axios from 'axios';
+//  import API from '@/config/api';
   import THeader from '@/components/slots/Header';
   import TAside from '@/components/slots/Aside';
+  import Message from '@/components/slots/Message';
 
   export default {
     name: 'app',
@@ -30,10 +35,23 @@
     components: {
       THeader,
       TAside,
+      Message,
+    },
+    created() {
+      this.getUserName();
     },
     methods: {
       closeAside() {
         this.$store.dispatch('changeShowAside', false);
+      },
+      getUserName() {
+//        sessionStorage.removeItem('nickname');
+//        axios.get(API.GETUSERNAME).then((response) => {
+//          const data = response.data;
+//          this.$store.dispatch('changeNickname', data.data.nickname || '');
+//        }).catch((err) => {
+//          console.log(err);
+//        });
       },
     },
   };
@@ -51,7 +69,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    background-color: #ebecee;
+    background-color: #fff;
     color: #414141;
     min-height: 100vh;
     font-size: 12px;
@@ -66,7 +84,8 @@
 
   .side {
     width: 260px;
-    @media (max-width: 820px){
+    position: relative;
+    @media (max-width: 820px) {
       width: 200px;
     }
   }
@@ -79,7 +98,7 @@
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.5);
     transition: all .24s ease;
-    z-index: 10;
+    z-index: 20;
   }
 
   @font-face {
@@ -103,4 +122,6 @@
       width: 260px;
     }
   }
+
+
 </style>

@@ -4,17 +4,22 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
+// const _entry = { app: './src/main.js' };
+// const lang = require('highlight.js-async-webpack/src/file.lang.hljs.js');
+// for (let i = 0; i < lang.length; i++) {
+//   _entry[lang[i]] = ['mavon-editor/dist/js/' + lang[i] + '.js']
+// }
+// console.log(_entry);
 module.exports = {
-  entry: {
-    app: './src/main.js'
-  },
+  entry: { app: './src/main.js', v: 'babel-polyfill' },
+  // entry: ["babel-polyfill", './src/main.js'],
   output: {
     path: config.build.assetsRoot,
-    filename: '[name].js',
+    filename: 'js/[name].js',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath

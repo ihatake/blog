@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div :class="isShow ? 'sidebar-close' : 'sidebar-toggle'" @click="toggleAside">
+    <div v-if="isShowSideIcon" :class="isShowSide ? 'sidebar-close' : 'sidebar-toggle'" @click="toggleAside">
       <div class="sidebar-toggle-line-wrap">
         <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
         <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
@@ -8,7 +8,7 @@
       </div>
     </div>
     <a href="/" class="logo">
-      <div>{{name}}</div>
+      <div>{{headerName}}</div>
     </a>
   </div>
 </template>
@@ -17,18 +17,22 @@
   export default {
     name: 'header',
     data() {
-      return {
-        name: 'XIAOXUA',
-      };
+      return {};
     },
     computed: {
-      isShow() {
+      isShowSide() {
         return this.$store.getters.getIsShowAside;
+      },
+      isShowSideIcon() {
+        return this.$store.getters.getIsShowAsideIcon;
+      },
+      headerName() {
+        return this.$store.getters.getHeaderName;
       },
     },
     methods: {
       toggleAside() {
-        if (this.isShow) {
+        if (this.isShowSide) {
           this.$store.dispatch('changeShowAside', false);
         } else {
           this.$store.dispatch('changeShowAside', true);
@@ -85,7 +89,7 @@
       padding: 5px;
       background-color: #222;
       line-height: 0;
-      z-index: 1050;
+      z-index: 21;
       cursor: pointer;
       &, & * {
         box-sizing: content-box;

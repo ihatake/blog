@@ -1,22 +1,36 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Page from '@/components/pages/Page';
-import Article from '@/components/pages/Article';
-import Post from '@/components/pages/Post';
+import Blog from '@/components/pages/Page/Blog';
+import Article from '@/components/pages/Article/Article';
+import Post from '@/components/pages/Post/Post';
+import Login from '@/components/pages/Login/Login';
+import Register from '@/components/pages/Login/Register';
+import Home from '@/components/pages/Home/index';
+import About from '@/components/pages/About/index';
 
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
-      name: 'home',
-      redirect: '/page/1',
+      redirect: '/home',
     },
     {
-      path: '/page/:currentPage',
+      path: '/home',
+      name: 'home',
+      component: Home,
+    },
+    {
+      path: '/blogs/:nickname',
+      name: 'blogs',
+      component: Blog,
+    },
+    {
+      path: '/welcome',
       name: 'page',
-      component: Page,
+      component: Blog,
     },
     {
       path: '/article/:id',
@@ -27,6 +41,24 @@ export default new Router({
       path: '/post',
       name: 'post',
       component: Post,
+      meta: {
+        requireAuth: true,
+      },
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register,
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About,
     },
   ],
 });

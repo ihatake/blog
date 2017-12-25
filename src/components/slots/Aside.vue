@@ -2,41 +2,79 @@
   <aside class="aside">
     <div class="about-me">
       <div class="avatar">
-        <img :src="require('@/assets/logo.png')"/>
+        <img :src="avatar"/>
         <div class="info">
-          <a href="#">
-            喵喵
+          <a href="javascript:void(0)" @click="goto('/home')" v-if="isLogin">
+            {{nickName}}
+          </a>
+          <a href="javascript:void(0)" @click="goto('/login')" v-if="!isLogin">
+            登录
           </a>
         </div>
         <div class="info">
           <span>
-            balabala....
+            <!--balabala....-->
           </span>
         </div>
       </div>
     </div>
     <div class="menu">
       <ul>
-        <li><a href="#/">主页</a></li>
-        <li><a href="#/post">发布</a></li>
-        <li><a href="#">存档</a></li>
-        <li><a href="#">关于</a></li>
+        <li @click="goto(`/home?p=1`)"><span>首页</span></li>
+        <li v-if="isLogin" @click="goto(`/blogs/${nickName}`)"><span>我的博客</span></li>
+        <li v-if="isLogin" @click="goto('/post')"><span>发布</span></li>
+        <li v-if="isLogin" @click="logout"><span>注销</span></li>
+        <li @click="goto('/about')"><span>关于网站</span></li>
       </ul>
     </div>
   </aside>
 </template>
 
 <script>
+  import axios from 'axios';
+  import API from '@/config/api';
+
   export default {
     name: '',
     data() {
       return {};
+    },
+    computed: {
+      nickName() {
+        return this.$store.getters.getNickname;
+      },
+      isLogin() {
+        return this.$store.getters.isLogin;
+      },
+      avatar() {
+        return this.$store.getters.avatar;
+      },
+    },
+    methods: {
+      goto(path) {
+        this.$router.push(path);
+        this.$store.dispatch('changeShowAside', false);
+      },
+      logout() {
+        axios.get(API.LOGOUT).then((response) => {
+          const data = response.data;
+          if (data.errorCode === '000') {
+            this.$store.dispatch('changeNickname', '{}');
+            this.$router.push('/login');
+            this.$store.dispatch('changeShowAside', false);
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      },
     },
   };
 </script>
 
 <style lang="less" scoped>
   .aside {
+    position: absolute;
+    z-index: 20;
     height: 100%;
     width: 100%;
     background-image: url(../../assets/aside.png);
@@ -88,6 +126,7 @@
         margin-bottom: 5px;
         margin-top: 15px;
         display: inline-block;
+        cursor: pointer;
         &:nth-of-type(odd) {
           float: left;
         }
@@ -95,7 +134,7 @@
           float: right;
         }
       }
-      a {
+      span {
         display: inline-block;
         width: 100%;
         height: 40px;

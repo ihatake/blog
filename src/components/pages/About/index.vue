@@ -1,20 +1,18 @@
 <template>
-  <div class="post">
-dnsjdn
+  <div class="bl-about">
+    about
   </div>
 </template>
 
 <script>
   export default {
-    name: 'post',
+    name: 'about',
     data() {
       return {};
     },
   };
 </script>
 
-<style lang="less" scoped>
-  .post {
+<style scoped>
 
-  }
 </style>

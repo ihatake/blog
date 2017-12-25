@@ -24,7 +24,8 @@
         <li v-if="isLogin" @click="goto(`/blogs/${nickName}`)"><span>我的博客</span></li>
         <li v-if="isLogin" @click="goto('/post')"><span>发布</span></li>
         <li v-if="isLogin" @click="logout"><span>注销</span></li>
-        <li @click="goto('/about')"><span>关于网站</span></li>
+        <li v-if="!isLogin" @click="goto('/register')"><span>注册</span></li>
+        <!--<li @click="goto('/about')"><span>关于网站</span></li>-->
       </ul>
     </div>
   </aside>

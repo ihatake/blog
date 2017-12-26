@@ -7,6 +7,7 @@ import Login from '@/components/pages/Login/Login';
 import Register from '@/components/pages/Login/Register';
 import Home from '@/components/pages/Home/index';
 import About from '@/components/pages/About/index';
+import Search from '@/components/pages/Search/Search';
 
 Vue.use(Router);
 
@@ -59,6 +60,11 @@ export default new Router({
       path: '/about',
       name: 'about',
       component: About,
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: Search,
     },
   ],
 });

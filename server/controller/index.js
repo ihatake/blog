@@ -304,8 +304,8 @@ module.exports = {
    */
   getSomeOnePosts: async (ctx, next) => {
     const nickname = ctx.request.query.nickname;
-    const currentPage = parseInt(ctx.request.query.currentPage, 10);
-    const pageSize = parseInt(ctx.request.query.pageSize, 10);
+    const currentPage = parseInt(ctx.request.query.currentPage, 10) || 1;
+    const pageSize = parseInt(ctx.request.query.pageSize, 10) || 50;
     const responseData = response.res();
     const findCount = Post.count({ nickname });
     const findPost = Post.find({ nickname })
@@ -336,8 +336,8 @@ module.exports = {
    * @returns {Promise.<void>}
    */
   getAllPosts: async (ctx, next) => {
-    const currentPage = parseInt(ctx.request.query.currentPage, 10);
-    const pageSize = parseInt(ctx.request.query.pageSize, 10);
+    const currentPage = parseInt(ctx.request.query.currentPage, 10) || 1;
+    const pageSize = parseInt(ctx.request.query.pageSize, 10) || 50;
     const responseData = response.res();
     const findCount = Post.count({});
     const findPost = Post.find({})
@@ -712,6 +712,49 @@ module.exports = {
       responseData.data = {};
       responseData.message = '评论失败';
     }
+    ctx.type = 'json';
+    ctx.body = responseData;
+  },
+  /**
+   * 关键字搜索
+   * @param ctx
+   * @param next
+   * @returns {Promise.<void>}
+   */
+  search: async (ctx, next) => {
+    const key = ctx.request.query.key;
+    const responseData = response.res();
+    if (!base.isString(key) || key.length < 0) {
+      responseData.errorCode = '001';
+      responseData.callStatus = 'FAILED';
+      responseData.message = '格式有误';
+      responseData.data = {};
+      ctx.type = 'json';
+      ctx.body = responseData;
+      return;
+    }
+    const rex = new RegExp(key, 'gi');
+    const currentPage = parseInt(ctx.request.query.currentPage, 10) || 1;
+    const pageSize = parseInt(ctx.request.query.pageSize, 10) || 50;
+    const findCount = Post.count({ $or: [{ nickname: rex }, { content: rex }] });
+    const findPost = Post.find({ $or: [{ nickname: rex }, { content: rex }] })
+      .sort({ posttime: -1 })
+      .limit(pageSize)
+      .skip((currentPage - 1) * pageSize);
+    await Promise.all([findCount, findPost]).then((result) => {
+      responseData.errorCode = '000';
+      responseData.callStatus = 'SUCCEED';
+      responseData.message = '成功';
+      responseData.data = result[1];
+      responseData.total = result[0];
+      responseData.currentPage = currentPage;
+    }).catch((err) => {
+      responseData.errorCode = '001';
+      responseData.callStatus = 'FAILED';
+      responseData.message = '获取数据失败';
+      responseData.data = [];
+      console.log(err);
+    });
     ctx.type = 'json';
     ctx.body = responseData;
   },

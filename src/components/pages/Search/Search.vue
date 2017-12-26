@@ -1,7 +1,14 @@
 <template>
-  <div class="bl-blog">
+  <div class="bl-search">
     <div class="content">
-      <BlogList :list="list"></BlogList>
+      <p class="key">下面文章中包含搜索词：{{key}}</p>
+      <ul>
+        <a v-for="(item,index) in list" :href="`/article/${item._id}`">
+          <li>
+            {{index + 1}}- 标题：{{item.title}}
+          </li>
+        </a>
+      </ul>
       <Spin size="large" fix v-if="spinShow">
       </Spin>
     </div>
@@ -15,7 +22,6 @@
   import Search from '@/components/slots/Search';
   import axios from 'axios';
   import API from '@/config/api';
-  import BlogList from './BlogList';
 
   export default {
     name: 'blog',
@@ -23,7 +29,7 @@
       return {
         list: [],
         currentPage: 1,
-        pageSize: 5,
+        pageSize: 20,
         total: 0,
         spinShow: true,
       };
@@ -31,15 +37,17 @@
     components: {
       Pagination,
       Search,
-      BlogList,
     },
     created() {
-      this.$store.dispatch('changeHeaderName', 'BLOGS');
+      this.$store.dispatch('changeHeaderName', 'SEARCH');
       this.getPosts();
     },
     computed: {
       nickname() {
         return this.$route.params.nickname;
+      },
+      key() {
+        return this.$route.query.key;
       },
       p() {
         if (!this.$route.query.p) {
@@ -48,6 +56,7 @@
         if (isNaN(+this.$route.query.p)) {
           return 1;
         }
+        console.log('mdksd', +this.$route.query.p);
         return +this.$route.query.p;
       },
     },
@@ -60,9 +69,9 @@
       getPosts() {
         this.list = [];
         this.spinShow = true;
-        axios.get(API.GETSOMEONEPOSTS, {
+        axios.get(API.SEARCH, {
           params: {
-            nickname: this.nickname,
+            key: this.key,
             pageSize: this.pageSize,
             currentPage: this.p,
           },
@@ -74,7 +83,7 @@
             this.total = data.total;
             const maxp = Math.ceil(this.total / this.pageSize);
             if (this.p > maxp) {
-              this.$router.push({ path: `/blogs/${this.nickname}`, query: { p: maxp || 1 } });
+              this.$router.push({ path: '/search', query: { key: this.key, p: maxp || 1 } });
             }
           }
         }).catch((err) => {
@@ -83,17 +92,17 @@
         });
       },
       pre(currentPage) {
-        this.$router.push({ path: `/blogs/${this.nickname}`, query: { p: currentPage } });
+        this.$router.push({ path: '/search', query: { key: this.key, p: currentPage } });
       },
       next(currentPage) {
-        this.$router.push({ path: `/blogs/${this.nickname}`, query: { p: currentPage } });
+        this.$router.push({ path: '/search', query: { key: this.key, p: currentPage } });
       },
     },
   };
 </script>
 
 <style lang="less" scoped>
-  .bl-blog {
+  .bl-search {
     width: 760px;
     margin: 0 auto;
     padding: 20px 20px 20px 20px;
@@ -101,6 +110,10 @@
     .content {
       min-height: 300px;
       position: relative;
+      text-align: left;
+      ul {
+        padding: 10px;
+      }
     }
     @media (max-width: 820px) {
       width: 100%;

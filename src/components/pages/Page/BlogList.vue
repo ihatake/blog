@@ -74,6 +74,7 @@
         z-index: 10;
       }
       .article {
+        text-align: left;
         .v-note-wrapper {
           z-index: 8;
         }

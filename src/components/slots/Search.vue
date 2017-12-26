@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <input type="text" class="search-input" placeholder="喵喵喵?"/>
+    <input type="text" v-model="key" class="search-input" placeholder="喵喵喵?" @keyup.enter="search"/>
     <Icon type="search" class="search-icon"></Icon>
   </div>
 </template>
@@ -9,7 +9,17 @@
   export default {
     name: 'search',
     data() {
-      return {};
+      return {
+        key: '',
+      };
+    },
+    methods: {
+      search() {
+        this.$router.push({
+          path: '/search',
+          query: { key: this.key, p: 1 },
+        });
+      },
     },
   };
 </script>

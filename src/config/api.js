@@ -13,4 +13,5 @@ export default {
   GETCOMMENT: '/api/getComment',
   PRAISECOMMENT: '/api/praiseComment',
   REPLAYCOMMENT: '/api/replayComment',
+  SEARCH: '/api/search',
 };

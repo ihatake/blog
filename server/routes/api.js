@@ -17,4 +17,5 @@ router.get('/getComment', controller.getComment);
 router.post('/postComment', controller.postComment);
 router.post('/praiseComment', controller.praiseComment);
 router.post('/replayComment', controller.replayComment);
+router.get('/search', controller.search);
 module.exports = router;

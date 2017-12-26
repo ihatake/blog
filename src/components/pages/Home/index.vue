@@ -6,7 +6,7 @@
       </Spin>
     </div>
     <pagination :currentPage="p" :total="total" :pageSize="pageSize" @pre="pre" @next="next"></pagination>
-    <search></search>
+    <search ></search>
   </div>
 </template>
 
@@ -73,7 +73,7 @@
             this.total = data.total;
             const maxp = Math.ceil(this.total / this.pageSize);
             if (this.p > maxp) {
-              this.$router.push({ path: `/blogs/${this.nickname}`, query: { p: maxp } });
+              this.$router.push({ path: `/blogs/${this.nickname}`, query: { p: maxp || 1 } });
             }
           }
         }).catch((err) => {
